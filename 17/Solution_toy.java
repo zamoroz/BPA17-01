@@ -1,10 +1,13 @@
-import java.io.*;
-import java.math.*;
-import java.security.*;
-import java.text.*;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.regex.*;
+package com.company;
+
+import java.io.IOException;
+import java.util.Scanner;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+
+import static java.util.logging.Level.INFO;
 
 public class Solution_toy {
 
@@ -26,58 +29,39 @@ public class Solution_toy {
      * Ответ: 4
      */
 
-    static int maximumToys(int[] p, int k) {
-        int c = 0, sum = 0, N = 0;
-        N = p.length;
-        Arrays.sort(p);
-
-        for (int i=0;i< N;i++)
-            {
-
-            if(sum+p[i]<=k)
-            {
-                sum = sum+ p[i];
-                c++;
-
-            }
-
-        }
-        return c;
-
-
-    }
-
-
     private static final Scanner scanner = new Scanner(System.in);
+    private static Logger LOGGER = Logger.getLogger("com.company.Solution_toy");
 
     public static void main(String[] args) throws IOException {
-    //    BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+        ConsoleHandler consoleHandler = new ConsoleHandler();
+        consoleHandler.setLevel(INFO);
+        consoleHandler.setFormatter(new SimpleFormatter());
 
-        String[] nk = scanner.nextLine().split(" ");
 
-        int n = Integer.parseInt(nk[0]);
+        try {
 
-        int k = Integer.parseInt(nk[1]);
-
-        int[] prices = new int[n];
-
-        String[] pricesItems = scanner.nextLine().split(" ");
-        scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
-
-        for (int i = 0; i < n; i++) {
-            int pricesItem = Integer.parseInt(pricesItems[i]);
-            prices[i] = pricesItem;
+            LOGGER.log(INFO, "инициализая k");
+            int k = scanner.nextInt();
+            LOGGER.log(INFO, "сканер скип");
+            scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+            LOGGER.log(INFO, "инициализация priceItems");
+            String pricesItems = scanner.nextLine();
+            LOGGER.log(INFO, "создание экземпляра класса MaxToys");
+            MaxToys res = new MaxToys(k);
+            LOGGER.log(INFO, "переопределение runnable");
+            Runnable task = () -> {
+                res.Main(pricesItems);
+                int result = res.getC();
+                System.out.println(result);
+                scanner.close();
+            };
+            LOGGER.log(INFO, " инициализация потока");
+            Thread thread = new Thread(task);
+            LOGGER.log(INFO, " запуск потока");
+            thread.start();
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "что-то пошло не так", e);
         }
 
-        int result = maximumToys(prices, k);
-/*
-        bufferedWriter.write(String.valueOf(result));
-        bufferedWriter.newLine();
-
-        bufferedWriter.close();
-*/
-
-        System.out.println(result);
-        scanner.close();
     }
 }
