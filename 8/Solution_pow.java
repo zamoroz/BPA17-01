@@ -1,6 +1,11 @@
 package com.company;
 import java.io.*;
 import java.util.*;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+
+import static java.util.logging.Level.INFO;
 
 public class Solution_pow {
     /*
@@ -25,31 +30,48 @@ public class Solution_pow {
         */
 
     private static final Scanner scanner = new Scanner(System.in);
+    private static Logger log = Logger.getLogger("com.company.Solution_toy");
 
     public static void main(String[] args) throws IOException {
+        ConsoleHandler consoleHandler = new ConsoleHandler();
+        consoleHandler.setLevel(INFO);
+        consoleHandler.setFormatter(new SimpleFormatter());
 
-        int n = scanner.nextInt();
-        scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+        try {
 
-        int[] a = new int[n];
+            log.log(INFO, "Инициализация n");
+            int n = scanner.nextInt();
+            log.log(INFO, "выполнение сканером функции skip ");
+            scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
 
-        String[] aItems = scanner.nextLine().split(" ");
-        scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+            log.log(INFO, "инициализация массива a");
+            int[] a = new int[n];
+            log.log(INFO, "сканер split");
+            String[] aItems = scanner.nextLine().split(" ");
+            scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+            log.log(INFO, "заполнение массива a ");
+            for (int i = 0; i < n; i++) {
+                int aItem = Integer.parseInt(aItems[i]);
+                a[i] = aItem;
+            }
+            log.log(INFO, "переопределяем runnable");
+            Runnable runnable = () -> {
+                log.log(INFO, "создаем экземпляр класса Solver");
+                Solver Example = new Solver();
+                log.log(INFO, "передаем в сеттер массив а");
+                Example.setInputData(a);
+                log.log(INFO, "вызываем метод,выполняющий вычисления и выводящий результат");
+                Example.SolveProblem();
+            };
+            log.log(INFO, "закрываем сканнер");
+            scanner.close();
+            log.log(INFO, "инициализируем поток");
+            Thread thread = new Thread(runnable);
+            log.log(INFO, "запускаем второй поток");
+            thread.start();
+        } catch (Exception error) {
 
-        for (int i = 0; i < n; i++) {
-            int aItem = Integer.parseInt(aItems[i]);
-            a[i] = aItem;
+            log.log(INFO, "Вызвано исключение " +error.getMessage());
         }
-
-        Runnable runnable = () ->{
-            Solver Example = new Solver();
-            Example.setInputData(a);
-            System.out.println("potok2");
-            Example.SolveProblem();
-        };
-        scanner.close();
-        Thread thread = new Thread(runnable);
-        thread.start();
-
     }
-}
+ }
