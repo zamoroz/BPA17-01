@@ -41,11 +41,15 @@ public class Solution_pow {
             a[i] = aItem;
         }
 
-        Solver Example = new Solver();
-        Example.setInputData(a);
-        int[] check =Example.getInputData();
-        System.out.print(check);
-        Example.SolveProblem();
+        Runnable runnable = () ->{
+            Solver Example = new Solver();
+            Example.setInputData(a);
+            System.out.println("potok2");
+            Example.SolveProblem();
+        };
         scanner.close();
+        Thread thread = new Thread(runnable);
+        thread.start();
+
     }
 }
